@@ -1,1 +1,1 @@
-git add . && git commit -m "автофайл" && git push origin
+git add . && git commit -m "my coommit" && git push origin
