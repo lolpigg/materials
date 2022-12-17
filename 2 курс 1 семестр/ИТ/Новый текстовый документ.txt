@@ -1,0 +1,98 @@
+import csv
+import sys
+from tabulate import tabulate
+import os
+def main():
+    srarif = 0.0
+    while True:
+        key = 0
+        try:
+            key = int(input("Выберите действие:\n 1 - Добавить пассажиров\n 2 - Вывести три списка веса багажа пассажиров"
+                "\n 3 - Вывести отсортированный список пассажиров по полю вес багажа\n 4 - Закрыть программу\n"))
+        except:
+            print("Неверный формат ввода. Попробуйте ещё раз. Нужен формат int.")
+            main()
+        if key == 1:
+            add()
+        elif key == 2:
+            spiski()
+        elif key == 3:
+            sort()
+        elif key == 4:
+            sys.exit()
+        elif key != 1 and key != 2 and key != 3:
+            print("Действие не найдено. Введите номер действия снова.")
+def add():
+    colichestvo = 0
+    try:
+        colichestvo = int(input("Введите количество пассажиров - "))
+    except:
+        print("Неверный формат ввода. Попробуйте еще раз. Нужен формат int.")
+        add()
+    adding(0, colichestvo)
+def adding(i : int, colichestvo : int):
+        allweight = 0
+        while i < colichestvo:
+            with open('fly.csv', 'a') as file:
+                try:
+                    surname = str(input("Введите вашу фамилию - "))
+                except:
+                    print("Неверный формат ввода. Нужен str.")
+                    adding(i, colichestvo)
+                try:
+                    nomer = str(input("Введите номер удостоверения личности - "))
+                except:
+                    print("Неверный формат ввода. Нужен str.")
+                    adding(i, colichestvo)
+                try:
+                    mesto = str(input("Введите место прибытия - "))
+                except:
+                    print("Неверный формат ввода. Нужен str.")
+                    adding(i, colichestvo)
+                try:
+                    weight = int(input("Введите вес багажа. Если он отсутствует, введите 0 - "))
+                    if weight < 0:
+                        weight = 0
+                except:
+                    print("Неверный формат ввода. Нужен int.")
+                file.write(f"\n{surname},{nomer},{mesto},{weight}")
+                i += 1
+                allweight += weight
+                file.close()
+def sort():
+    with open('fly.csv', 'r') as file:
+        try:
+            csv_reader = csv.reader(file, delimiter=',')
+            next(csv_reader)
+            sorted_tuple = sorted(csv_reader, key=lambda x: float(x[-1]), reverse = True)
+            headers = ["Фамилия", "Номер",  "Место", "Вес багажа"]
+            print(tabulate(sorted_tuple, headers, tablefmt="grid"))
+        except:
+            print("Сначала нужно добавить пассажиров.")
+    file.close()
+def spiski():
+    srarif = 0.0
+    with open('fly.csv', 'r') as file:
+        without = []
+        bigger = []
+        smaller = []
+        i = 0
+        csv_reader = csv.reader(file, delimiter=',')
+        for chislo in csv_reader:
+            srarif += float(chislo[-1])
+            i+=1
+        srarif /= i
+        for read in csv_reader:
+            print(srarif)
+            if int(read[3]) == 0:
+                without.append(read[0])
+            elif float(read[3]) > srarif:
+                bigger.append(read[0])
+            elif float(read[3]) < srarif:
+                smaller.append(read[0])
+        print(f"Пассажиры без багажа - {without}")
+        print(f"Пассажиры с весом багажа больше среднестатистического - {bigger}")
+        print(f"Пассажиры с весом багажа ниже среднестатистического(не включая пассажиров без багажа) - {smaller}")
+    file.close()
+if __name__ == "__main__":
+    main()
