@@ -1,0 +1,45 @@
+@echo off
+Setlocal EnableDelayedExpansion
+chcp 65001
+:start
+set /P num=Введите число от 4 до 9:
+set /A num1=%num%
+if "%num1%" LSS "4" if %num1% GTR "9" goto start
+if "%num1%" GEQ "4" if %num1% LEQ "9" goto files
+
+:files
+cd C:\Users\lolpigg\Desktop\
+for /l %%a in (1 1 %num1%) do (
+type nul > page%%a.bat
+)
+set /A num2=4
+set /A random=(%RANDOM%%%num1)+1
+
+if not num2==%random% goto lose
+if num2==%random% goto win
+
+:lose
+set /A num3=%num1%-1
+for /l %%a in (1 1 %num3%) do (
+echo @echo off > page%%a.bat
+echo chcp 65001 >> page%%a.bat
+echo cls >> page%%a.bat
+echo echo Загрузка...>> page%%a.bat
+echo timeout 3 /nobreak >> page%%a.bat
+echo color 1 >> page%%a.bat
+echo cls >> page%%a.bat
+echo echo Неправильно, попробуй еще раз. >> page%%a.bat
+echo timeout 7 /nobreak >> page%%a.bat
+)
+
+:win
+echo @echo off > page%num1%.bat
+echo chcp 65001 >> page%num1%.bat
+echo cls >> page%num1%.bat
+echo echo Загрузка...>> page%num1%.bat
+echo timeout 3 /nobreak >> page%num1%.bat
+echo color 2 >> page%num1%.bat
+echo cls >> page%num1%.bat
+echo echo Молодец, ты угадал.>> page%num1%.bat
+echo timeout 7 /nobreak >> page%num1%.bat
+echo del C:\Users\lolpigg\Desktop\*.bat >> page%num1%.bat
