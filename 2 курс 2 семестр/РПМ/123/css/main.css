@@ -10,7 +10,6 @@ body {
 }
 
 header {
-  height: 300px;
   width: 100%;
   color: #fff;
   display: flex;
@@ -23,9 +22,11 @@ header {
   display: flex;
   align-items: center;
 }
-.hc .head{
+
+.hc .head {
   height: 100%;
 }
+
 header img {
   height: 100PX;
 }
@@ -73,13 +74,6 @@ header img {
   width: 100%;
 }
 
-#kfc {
-  width: 179px;
-  position: absolute;
-  margin: -172px 875px;
-  height: 174px;
-}
-
 footer {
   padding-left: 3%;
   height: 14%;
@@ -96,4 +90,45 @@ footer h2 {
 
 footer img {
   height: 150px;
+}
+
+.txt {
+  color: white;
+  padding-left: 100px;
+}
+
+.baretsky {
+  display: flex;
+  justify-content: center;
+  width: auto;
+}
+
+.baretsky img {
+  width: 500px;
+  height: 300px;
+  transition-duration: 1.5s;
+  clip-path: inset(0 16% 0 16%);
+}
+
+.baretsky img:hover {
+  width: 80vw;
+  transform: rotate(720deg);
+  height: 40vh;
+}
+.prepod{
+  /* margin-left: 100px; */
+  height: 179px;
+  width: 250px;
+}
+.prep{
+  display: flex;
+  justify-content: space-evenly;
+  gap: 35px;
+}
+.putin{
+  padding-top: 50px;
+
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
