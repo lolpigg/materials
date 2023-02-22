@@ -1,6 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Lobster&display=swap');
-
+*>a{
+  color: #000;
+  text-decoration: none;
+}
+#psy{
+  color: white;
+}
 body {
   padding: 0;
   font-family: "PT Mono", monospace;
@@ -15,7 +21,7 @@ header {
   display: flex;
   align-items: center;
   background: #00543c;
-  height: 100px;
+  height: auto;
 }
 
 .hc {
@@ -61,7 +67,6 @@ header img {
 .menu3 {
   color: white;
   background: rgb(177, 0, 0);
-
 }
 
 .abram {
@@ -97,6 +102,7 @@ footer img {
   padding-left: 100px;
 }
 
+
 .baretsky {
   display: flex;
   justify-content: center;
@@ -116,7 +122,6 @@ footer img {
   height: 40vh;
 }
 .prepod{
-  /* margin-left: 100px; */
   height: 179px;
   width: 250px;
 }
@@ -124,11 +129,20 @@ footer img {
   display: flex;
   justify-content: space-evenly;
   gap: 35px;
+  flex-wrap: wrap;
 }
 .putin{
   padding-top: 50px;
-
   display: flex;
   justify-content: center;
   width: 100%;
+}
+.divs{
+  display: flex;
+  justify-content: space-evenly;
+  gap: 146px;
+  flex-wrap: wrap;  
+}
+.divs >  *{
+  padding: 0%;
 }
