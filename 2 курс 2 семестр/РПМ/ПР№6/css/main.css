@@ -13,35 +13,37 @@ body {
   background-color: #00543c;
   margin: 0;
   overflow-x: hidden;
+  display: grid;
 }
 
 header {
   width: 100%;
   color: #fff;
-  display: flex;
-  align-items: center;
+  display: grid;
   background: #00543c;
-  height: auto;
+  height: 20vh;
+  grid-template-rows: 1fr;
 }
 
 .hc {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 4fr; 
 }
 
 .hc .head {
   height: 100%;
+  font-size: 3.5vh;
 }
 
 header img {
-  height: 100PX;
+  height: 20vh;
 }
 
 .menu {
   width: 100%;
-  display: flex;
+  display: grid;
   height: 70%;
-  justify-content: space-evenly;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .menu h2 {
@@ -71,6 +73,7 @@ header img {
 
 .abram {
   width: 100%;
+  display: grid;
   height: 10%;
 }
 
@@ -82,10 +85,11 @@ header img {
 footer {
   padding-left: 3%;
   height: 14%;
-  display: flex;
-  font: 1.2em "Lobster";
-  justify-content: space-between;
+  display: grid;
+  font: 3.5vh "Lobster";
   background: #00543c;
+  grid-template-columns: 5fr 1fr;
+  grid-template-rows: 1fr;
 }
 
 footer h2 {
@@ -94,24 +98,29 @@ footer h2 {
 }
 
 footer img {
-  height: 150px;
+  height: 20vh;
 }
 
 .txt {
   color: white;
-  padding-left: 100px;
+  padding-left: 10vw;
+  font-size: 3.5vh;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
 }
 
 
 .baretsky {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  align-self: center;
+  justify-self: center;
   width: auto;
 }
 
 .baretsky img {
-  width: 500px;
-  height: 300px;
+  width: 100vw;
+  height: 60vh;
   transition-duration: 1.5s;
   clip-path: inset(0 16% 0 16%);
 }
@@ -122,27 +131,95 @@ footer img {
   height: 40vh;
 }
 .prepod{
-  height: 179px;
-  width: 250px;
+  height: 25vh;
+  width: 25vw;
 }
 .prep{
-  display: flex;
-  justify-content: space-evenly;
-  gap: 35px;
-  flex-wrap: wrap;
+  display: grid;
+  gap: 10px;
 }
 .putin{
-  padding-top: 50px;
+  padding-top: 3vh;
+  display: grid;
+}
+.putin2{
+  width: 50vw;
+  height: 75vh;
+  align-self: center;
+  justify-self: center;
+}
+.divs{
+  display: grid;
+  gap: 10vw;
+  grid-template: 1fr 1fr / 1fr 1fr 1fr;
+}
+.divs >  div{
+  padding: 0%;
+}
+.shaman{
+  width: 0px;
+  height: 0px;
+}
+
+@media only screen and (min-device-width:0px) and (max-device-width: 812px)and (orientation: portrait) {
+.menu{
   display: flex;
-  justify-content: center;
-  width: 100%;
+  flex-wrap: wrap;  
+}
+.hc .head {
+  height: 100%;
+  font-size: 2vh;
+}
+header img{
+  height: 10vh;
+}
+header{
+  height: 11vh;
+}
+footer{
+  font: 2vh "Lobster";
+}
+.menu1 {
+  color: rgb(0, 10, 147);
+  background: #ffffff;
+}
+.menu2{
+  color: white;
+  background: blue;
+}
+.abcd{
+  color: white;
 }
 .divs{
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-evenly;
-  gap: 146px;
-  flex-wrap: wrap;  
+  gap: 10px;
 }
-.divs >  *{
-  padding: 0%;
+.txt{
+  padding-left: 0px;
+}
+.shaman{
+  height: 0px;
+  width: 0px;
+}
+}
+@media screen and (device-width: 360px)and (device-height: 640px) and (orientation: portrait) {
+  .div1{
+    background-color: blue;
+    height: 50px;
+  }
+  .div2{
+    background-color: yellow;
+    height: 50px;
+  }
+  .hc .head{
+    font-size: 4vh;
+  }
+}
+@media only screen and (min-device-width: 812px) and (max-device-width: 1024px)and (orientation: portrait) {
+  .shaman{
+    width: 100%;
+    height: 100%;
+  }
 }

@@ -1,0 +1,332 @@
+@import url('https://fonts.googleapis.com/css2?family=Bellota:ital,wght@0,400;0,700;1,400;1,700&family=PT+Mono&family=Yanone+Kaffeesatz:wght@700&display=swap');
+
+header {
+    width: 100%;
+    height: 12vh;
+    background-color: #E29578;
+    display: flex;
+    justify-content: center;
+}
+#pravila{
+    background-color: #FFDDD2;
+    padding: 2vh;
+    width: 100%;
+}
+ol{
+    color: rgb(128, 28, 28);
+    text-decoration: #006D77;
+    font-size: 4vh;
+    font-family: 'Bellota', cursive;
+    font-weight: 600;
+    margin: 4vh;
+}
+ol > li{
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}
+ul > li{
+    color: rgb(128, 28, 28);
+    text-decoration: #006D77;
+    font-size: 4vh;
+    font-family: 'Bellota', cursive;
+    font-weight: 600;
+    margin: 4vh;
+}
+a>img {
+    height: 20vh;
+    width: auto;
+    position: relative;
+    transform: translateY(-40%);
+    animation-name: Appearance;
+    animation-duration: 3s;
+    animation-timing-function: cubic-bezier(.1, -.6, .2, 0);
+}
+
+
+@keyframes Appearance {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+body {
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#spisok {
+    margin-left: 2vh;
+    margin-top: 1vh;
+}
+
+main {
+    background-color: #FFDDD2;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+* {
+    /* outline: 1px solid; */
+    padding: 0px;
+    margin: 0px;
+}
+
+.text {
+    color: rgb(128, 28, 28);
+    text-align: center;
+    text-decoration: #006D77;
+    font-size: 5vh;
+    font-family: 'Bellota', cursive;
+    font-weight: 600;
+}
+
+#first_header {
+    height: 100%;
+    width: 40%
+}
+
+#second_header {
+    height: 100%;
+    width: 40%;
+}
+
+.text2 {
+    color: rgb(128, 28, 28);
+    text-decoration: #006D77;
+    font-size: 4vh;
+    font-family: 'Bellota', cursive;
+    font-weight: 600;
+    margin: 4vh;
+}
+
+button {
+    width: 48%;
+    height: 90%;
+    margin: 0;
+    margin-top: 0.6vh;
+    background: #ffbca3;
+    cursor: pointer;
+    color: rgb(128, 28, 28);
+    text-decoration: #006D77;
+    font-size: 4vh;
+    border-radius: 5px;
+    font-family: 'Bellota', cursive;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5), 7px 7px 20px 0px rgba(0, 0, 0, .1), 4px 4px 5px 0px rgba(0, 0, 0, .1);
+    outline: none;
+}
+
+button:hover {
+    background-color: #f9a486;
+}
+
+.text2>* {
+    margin: 3vh;
+}
+
+#kirieshka_pic {
+    height: 20vh;
+    display: flex;
+}
+.images_about{
+    width: 100vw;
+    height: 100vh;
+}
+.images_about > img{
+    height: 100vh;
+    width: 98.7vw;
+}
+#name{
+    display: flex;
+    justify-items: center;
+    width: 5vw;
+    height: 5vh;
+    background-color: #FFDDD2;
+}
+section {
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFDDD2;
+}
+
+article {
+    width: 60%;
+    height: 50vh;
+    background-color: #FFDDD2;
+}
+
+aside {
+    width: 40%;
+    height: 100vh;
+    justify-self: end;
+}
+
+footer {
+    width: 100%;
+    height: 20vh;
+    background-color: #E29578;
+    font-family: 'Bellota', cursive;
+    font-weight: 600;
+    color: rgb(128, 28, 28);
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+#footer1 {
+    font-size: 6vh;
+}
+
+#footer2 {
+    display: flex;
+    justify-content: end;
+    align-items: start;
+    font-size: 4vh;
+}
+
+#kirieshka1 {
+    width: 60%;
+}
+
+#text_o_nas{
+    width: 100%;
+    height: auto;
+    background-color: #E29578;
+}
+#text_o_nas > p{
+    font-family: 'Bellota', cursive;
+    font-weight: 600;
+    color: rgb(128, 28, 28);
+    font-size: 4vh;
+    margin: 0.5vh;
+    text-align: center;
+}
+
+
+@media only screen and (min-device-width: 525px) and (max-device-width: 855px) {
+    aside {
+        height: 150vh;
+    }
+
+    section {
+        height: 75vh;
+    }
+
+    main {
+        height: 150vh;
+    }
+}
+
+@media only screen and (min-device-width: 0px) and (max-device-width: 525px) {
+    aside {
+        height: 200vh;
+    }
+
+    section {
+        height: 100vh;
+    }
+
+    main {
+        height: 200vh;
+    }
+}
+
+@media only screen and (min-device-width: 480px) and (max-device-width: 590px) {
+    button {
+        font-size: 2.5vh;
+    }
+
+    #footer1 {
+        font-size: 5.5vh;
+    }
+
+    #footer2 {
+        font-size: 3.6vh;
+    }
+    .text2{
+        font-size: 3.6vh;
+    }
+}
+
+@media only screen and (min-device-width: 465px) and (max-device-width: 480px) {
+    button {
+        font-size: 1.8vh;
+    }
+
+    #footer1 {
+        font-size: 3vh;
+    }
+
+    #footer2 {
+        font-size: 2.1vh;
+    }
+    .text2{
+        font-size: 3.5vh;
+    }
+}
+
+@media  screen and (min-device-width: 320px) and (max-device-width: 465px) {
+    button {
+        font-size: 1.3vh;
+    }
+
+    #footer1 {
+        font-size: 1vh;
+    }
+
+    #footer2 {
+        font-size: 1.3vh;
+    }
+    .text2{
+        font-size: 2vh;
+    }
+}
+
+
+@media only screen and (min-device-width:0px) and (max-device-width: 320px) {
+    button {
+        font-size: 1vh;
+    }
+
+    #footer1 {
+        font-size: 2vh;
+    }
+
+    #footer2 {
+        font-size: 1.3vh;
+    }
+
+    .text {
+        font-size: 2vh;
+    }
+
+    .text2 {
+        font-size: 1.5vh;
+    }
+}
+
+@media only screen and (min-device-width:0px) and (max-device-width: 290px) {
+    button {
+        width: 15vw;
+    }
+}
+@media only screen and (min-device-width:1440px) and (max-device-width: 2000px){
+    header > img{
+        width: 20vw;
+    }
+}
