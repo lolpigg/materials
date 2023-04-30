@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контакты</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style/main.css'%}" type="text/css">
+    <link rel="shortcut icon" href="{% static 'images/main_ico.ico'%}" type="image/x-icon">
+</head>
+<body>
+    {% include 'includes/header.html' %}
+    <div class="cont_text">
+        <p>Телефон:<br>
+            <a href="tel:+79776704121">+79776704121</a><br>
+            Вопросы:<br>
+            <a href="mailto:questions@kirieshki.com">questions@kirieshki.com</a><br>
+            Мероприятия:<br>
+            <a href="mailto:events@kirieshki.com">events@kirieshki.com</a><br>
+            Жалобы:<br>
+            <a href="mailto:complains@kirieshki.com">complains@kirieshki.com</a>
+        </p>
+    </div>
+    <div class="soc_refs">
+        <a class="refs" href="https://vk.com/sashatop01"><img src="{% static 'images/vk.webp'%}"></a>
+        <a class="refs" href="https://ok.ru/group/52271509668057"><img src="{% static 'images/ok.png'%}"></a>
+        <a class="refs" href="https://www.youtube.com/watch?v=-bROlO-KMto"><img src="{% static 'images/youtube.png'%}"></a>
+    </div>
+    {% include 'includes/footer.html' %}
+</body>
+</html>

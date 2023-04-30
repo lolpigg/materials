@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аренда</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style/main.css'%}" type="text/css">
+    <link rel="shortcut icon" href="{% static 'images/main_ico.ico'%}" type="image/x-icon">
+</head>
+
+<body>
+    {% include 'includes/header.html' %}
+    <div class="cabinets">
+        <img src="{% static 'images/cab1.jpg'%}">
+        <img src="{% static 'images/cab2.jpg'%}">
+        <div class="cabtext">
+            <p>Комната с диско-шаром</p>
+            <p>Выходные - 2500/час</p>
+            <p>Будни - 2000/час</p>
+        </div>
+        <div class="cabtext">
+            <p>Библиотека</p>
+            <p>Выходные - 2000/час</p>
+            <p>Будни - 1500/час</p>
+        </div>
+    </div>
+    <div id="manager_back">
+        <div class="manager">
+            <img src="{% static 'images/manager.svg'%}">
+            <div id="manager_text">
+                <p>Юлия<br>Менеджер по аренде<br><a href="tel:+79779996799">+79779996799</a></p>
+            </div>
+        </div>
+    </div>
+    {% include 'includes/footer.html' %}
+</body>
+
+</html>
