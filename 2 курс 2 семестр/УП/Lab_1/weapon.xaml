@@ -1,0 +1,13 @@
+﻿<Window x:Class="Lab_1.weapon"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lab_1"
+        mc:Ignorable="d"
+        Title="weapon" Height="450" Width="800">
+    <Grid>
+        <DataGrid x:Name="datagrid" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,0,0,81"/>
+        <ComboBox x:Name="combobox" HorizontalAlignment="Center" Margin="0,353,0,0" VerticalAlignment="Top" Width="800" Height="81" SelectionChanged="combobox_SelectionChanged_1"/>
+    </Grid>
+</Window>
