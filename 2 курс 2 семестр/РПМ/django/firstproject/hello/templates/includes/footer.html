@@ -1,4 +1,13 @@
 <footer>
     <h2 id="footer1">Антикафе "Кириешки"<br>Мы открыты круглосуточно.</h2>
-    <h4 id="footer2">ООО "Кириешки"<br>2006-2023<br>Все права защищены.©</h4>
+    <h3>
+        {% if user.is_authenticated %}
+        <h3 class="footer2">Здравствуй, {{user.username|default:"Гость"}}</h3>
+        <a class = "footer2" href="{% url 'logout' %}">Выйти</a>
+        {% else %}
+        <a class="footer2" href="{% url 'login' %}">Войти</a>
+        <a class="footer2" href="{% url 'signup' %}">Зарегистрироваться</a>
+        {% endif %}
+    </h3>
+    <h4 class="footer2">ООО "Кириешки"<br>2006-2023<br>Все права защищены.©</h4>
 </footer>

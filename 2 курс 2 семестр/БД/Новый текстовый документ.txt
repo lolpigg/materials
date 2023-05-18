@@ -43,3 +43,5 @@ echo cls >> page%num1%.bat
 echo echo Молодец, ты угадал.>> page%num1%.bat
 echo timeout 7 /nobreak >> page%num1%.bat
 echo del C:\Users\lolpigg\Desktop\*.bat >> page%num1%.bat
+
+молодежный бульвар 9 2 подьезд 6 этаж домофон квартира 90

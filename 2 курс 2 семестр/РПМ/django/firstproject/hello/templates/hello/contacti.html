@@ -1,10 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load bootstrap5 %}
+    {% comment %} ПРОВОДНИК CTRL SHIFT E {% endcomment %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Контакты</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     {% load static %}
     <link rel="stylesheet" href="{% static 'style/main.css'%}" type="text/css">
     <link rel="shortcut icon" href="{% static 'images/main_ico.ico'%}" type="image/x-icon">
@@ -12,21 +19,26 @@
 <body>
     {% include 'includes/header.html' %}
     <div class="cont_text">
-        <p>Телефон:<br>
-            <a href="tel:+79776704121">+79776704121</a><br>
-            Вопросы:<br>
-            <a href="mailto:questions@kirieshki.com">questions@kirieshki.com</a><br>
-            Мероприятия:<br>
-            <a href="mailto:events@kirieshki.com">events@kirieshki.com</a><br>
-            Жалобы:<br>
-            <a href="mailto:complains@kirieshki.com">complains@kirieshki.com</a>
-        </p>
+        {% for contact in contacts %}
+        {% if contact.type == 'Mail' %}
+        <p>{{contact.name}}:<br><a href="mailto:{{contact.contact}}">{{contact.contact}}</a></p>
+        {% elif contact.type == 'Tel' %}
+        <p>{{contact.name}}:<br><a href="tel:{{contact.contact}}">{{contact.contact}}</a></p>
+        {% elif contact.type == 'Href'%}
+        <p>{{contact.name}}:<br><a href="{{contact.contact}}">{{contact.contact}}</a></p>
+        {% elif contact.type == 'None' %}
+        <p>{{contact.name}}:<br><a>{{contact.contact}}</a></p>
+        {% endif %}
+        {% endfor %}
     </div>
     <div class="soc_refs">
-        <a class="refs" href="https://vk.com/sashatop01"><img src="{% static 'images/vk.webp'%}"></a>
-        <a class="refs" href="https://ok.ru/group/52271509668057"><img src="{% static 'images/ok.png'%}"></a>
-        <a class="refs" href="https://www.youtube.com/watch?v=-bROlO-KMto"><img src="{% static 'images/youtube.png'%}"></a>
+        {% for social_media in social_medias %}
+        <a class="refs" href="{{social_media.href}}" title="{{social_media.name}}"><img src="{{social_media.href_img}}"></a>
+        {% endfor %}
     </div>
     {% include 'includes/footer.html' %}
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+    crossorigin="anonymous"></script>
 </html>

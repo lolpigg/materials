@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
+    {% load bootstrap5 %}
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>О нас</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"/>
     {% load static %}
     <link rel="stylesheet" href="{% static 'style/main.css'%}" type="text/css">
     <link rel="shortcut icon" href="{% static 'images/main_ico.ico'%}" type="image/x-icon">
@@ -13,7 +18,7 @@
 
 <body>
     <header>
-        <a href="main_menu.html"><img src="{% static 'images/kirieshki.png'%}" alt="Кириешки" id="kirieshka_pic"></a>
+        <a class = "hd" href="main_menu.html"><img src="{% static 'images/kirieshki.png'%}" alt="Кириешки" id="kirieshka_pic"></a>
     </header>
     <div class="images_about">
         <img src="{% static 'images/coffee.webp'%}">
@@ -25,9 +30,15 @@
         <img src="{% static 'images/coffee3.jpg'%}">
     </div>
     <div id="text_o_nas">
-            <p>Ценовая расценка:<br>Будни: час - 100 рублей<br>Выходные: час - 150 рублей<br>Стопчек - 500 рублей<br> Стопчек для студентов - 300 рублей</p>
+        <p>Ценовая расценка:</p>
+        {% for price in prices %}
+        {% if price.stopcheck %}
+        <p>{{price.text}} - {{price.price}} рублей</p>
+        {% else %}
+        <p>{{price.text}}: час - {{price.price}} рублей</p>
+        {% endif %}
+        {% endfor%}
     </div>
     {% include 'includes/footer.html' %}
 </body>
-
 </html>

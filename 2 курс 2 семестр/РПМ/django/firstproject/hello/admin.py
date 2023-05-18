@@ -1,27 +1,42 @@
 from django.contrib import admin
 from .models import Person
-from .models import Logs
+from .models import Log
 from .models import Room
 from .models import Social_Media
-from .models import Events
+from .models import Event
+from .models import Contact
+from .models import Price
+from .models import Manager
 # Register your models here.
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('name', 'lastname')
 
-class LogsAdmin(admin.ModelAdmin):
+class LogAdmin(admin.ModelAdmin):
     list_display = ('login', 'password', 'person')
 
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ('name', 'workdays_price', 'weekends_price')
+    list_display = ('id', 'name','href_img', 'workdays_price', 'weekends_price')
 
 class Social_MediaAdmin(admin.ModelAdmin):
-    list_display = ('name', 'href')
-
-class EventsAdmin(admin.ModelAdmin):
+    list_display = ('id','name', 'href','href_img')
+    
+class EventAdmin(admin.ModelAdmin):
     list_display = ('name', 'time', 'description')
+    
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'contact', 'type')
+    
+class PriceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'text', 'price', 'stopcheck')
 
-admin.site.register(Person,PersonAdmin)
-admin.site.register(Logs,LogsAdmin)
-admin.site.register(Room,RoomAdmin)
-admin.site.register(Social_Media,Social_MediaAdmin)
-admin.site.register(Events,EventsAdmin)
+class ManagerAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'profession', 'telephone')
+
+admin.site.register(Person, PersonAdmin)
+admin.site.register(Log, LogAdmin)
+admin.site.register(Room, RoomAdmin)
+admin.site.register(Social_Media, Social_MediaAdmin)
+admin.site.register(Event, EventAdmin)
+admin.site.register(Contact, ContactAdmin)
+admin.site.register(Price, PriceAdmin)
+admin.site.register(Manager, ManagerAdmin)

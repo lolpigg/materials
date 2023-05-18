@@ -32,7 +32,7 @@ ul > li{
     font-weight: 600;
     margin: 4vh;
 }
-a>img {
+.hd>img {
     height: 20vh;
     width: auto;
     position: relative;
@@ -118,7 +118,7 @@ button {
     color: rgb(128, 28, 28);
     text-decoration: #006D77;
     font-size: 4vh;
-    border-radius: 5px;
+    border-radius: 0.4em;
     font-family: 'Bellota', cursive;
     font-weight: 600;
     transition: all 0.3s ease;
@@ -129,6 +129,37 @@ button {
 }
 
 button:hover {
+    background-color: #f9a486;
+}
+
+#homediv{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;    
+    align-items: center;
+}
+
+.but {
+    width: 100%;
+    height: 90%;
+    margin: 0;
+    margin-top: 0.6vh;
+    background: #ffbca3;
+    cursor: pointer;
+    color: rgb(128, 28, 28);
+    text-decoration: #006D77;
+    font-size: 4vh;
+    border-radius: 0.4em;
+    font-family: 'Bellota', cursive;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5), 7px 7px 20px 0px rgba(0, 0, 0, .1), 4px 4px 5px 0px rgba(0, 0, 0, .1);
+    outline: none;
+}
+
+.but:hover {
     background-color: #f9a486;
 }
 
@@ -178,7 +209,7 @@ aside {
 
 footer {
     width: 100%;
-    height: 20vh;
+    height: fit-content;
     background-color: #E29578;
     font-family: 'Bellota', cursive;
     font-weight: 600;
@@ -192,11 +223,12 @@ footer {
     font-size: 4vh;
 }
 
-#footer2 {
+.footer2 {
     display: flex;
     justify-content: end;
     align-items: start;
-    font-size: 3vh;
+    font-size: 2vh;
+    margin-left: 2%;
 }
 
 #kirieshka1 {
@@ -211,11 +243,13 @@ footer {
     padding: 2vh;
     margin-bottom: 0vh;
 }
-.cabinets > img{
-    width: 40%;
+.cabinets > .cabtext > img{
+    width: 100%;
+    height: 60%;
 }
 .cabtext{
     width: 40%;
+    height: fit-content;
     text-align: center;
     font-size: 4vh;
 }
@@ -250,11 +284,12 @@ footer {
 }
 #manager_back{
     width: 100%;
-    height: 40vh;
     margin: 0px;
+    padding-bottom: 1vh;
     justify-content: center;
     display: flex;
     align-items: center;
+    flex-direction: column;
     background-color: #FFDDD2;
 }
 .soc_refs{
@@ -267,13 +302,24 @@ footer {
 .soc_refs > a{
     width: 10%;
     height: 100%;
+    padding: 1%;
 }
-.refs{
-    transform: translateY(40%);
+.refs > img {
+    width: 100%;
+    height: 95%;
 }
 #manager_text{
     width: 70%;
     height: 100%;
+}
+.aut_body{
+    background-color: #E29578;
+    padding: 4%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 #manager_text > p{
     text-align: center;
@@ -299,7 +345,7 @@ footer {
         font-size: 4vh;
     }
 
-    #footer2 {
+    .footer2 {
         font-size: 3vh;
     }
 }
@@ -341,7 +387,7 @@ footer {
         font-size: 4vh;
     }
 
-    #footer2 {
+    .footer2 {
         font-size: 3vh;
     }
     .text2{
@@ -358,7 +404,7 @@ footer {
         font-size: 3vh;
     }
 
-    #footer2 {
+    .footer2 {
         font-size: 2.1vh;
     }
     .text2{
@@ -375,7 +421,7 @@ footer {
         font-size: 1vh;
     }
 
-    #footer2 {
+    .footer2 {
         font-size: 1.3vh;
     }
     .text2{
@@ -393,7 +439,7 @@ footer {
         font-size: 2vh;
     }
 
-    #footer2 {
+    .footer2 {
         font-size: 1.3vh;
     }
 
@@ -463,8 +509,8 @@ footer {
     #footer1{
         font-size: 3vw;
     }
-    #footer2{
-        font-size: 3vw;
+    .footer2{
+        font-size: 2.5vw;
     }
     footer{
         height: 30vh;
