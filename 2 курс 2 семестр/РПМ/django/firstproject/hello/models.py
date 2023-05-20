@@ -48,3 +48,9 @@ class Manager(models.Model):
         profession = models.CharField(max_length=20)
         telephone = models.CharField(max_length=15)
         href_img = models.CharField(max_length=300)
+
+class Comment(models.Model):
+        id = models.BigAutoField(primary_key=True)
+        name = models.CharField(max_length=20)
+        date = models.DateField()
+        text = models.CharField(max_length=500)

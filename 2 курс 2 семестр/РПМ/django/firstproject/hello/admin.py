@@ -1,12 +1,5 @@
 from django.contrib import admin
-from .models import Person
-from .models import Log
-from .models import Room
-from .models import Social_Media
-from .models import Event
-from .models import Contact
-from .models import Price
-from .models import Manager
+from .models import *
 # Register your models here.
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('name', 'lastname')
@@ -32,6 +25,9 @@ class PriceAdmin(admin.ModelAdmin):
 class ManagerAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'profession', 'telephone')
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'date', 'text')
+
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Log, LogAdmin)
 admin.site.register(Room, RoomAdmin)
@@ -40,3 +36,4 @@ admin.site.register(Event, EventAdmin)
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(Price, PriceAdmin)
 admin.site.register(Manager, ManagerAdmin)
+admin.site.register(Comment, CommentAdmin)

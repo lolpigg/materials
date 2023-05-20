@@ -40,6 +40,19 @@
             </ul>
         </aside>
     </main>
+    <div id="back">
+    {% for comment in comments%}
+        <div class="comment">
+            <p id="comment_name">{{comment.name}} - {{comment.date}}</p>
+            <p id="comment_text">{{comment.text}}</p>
+        </div>
+    {% endfor %}
+    <button class="newbutton" href="">Добавить комментарий</button>
+    {% if user.is_authenticated %}
+    <button class="newbutton" href="">Изменить комментарий</button>
+    <button class="newbutton" href="">Удалить комментарий</button>
+    {% endif %}
+    </div>
     {% include 'includes/footer.html' %}
 </body>
 

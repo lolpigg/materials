@@ -29,7 +29,7 @@ ul > li{
     text-decoration: #006D77;
     font-size: 4vh;
     font-family: 'Bellota', cursive;
-    font-weight: 600;
+    font-weight: 500;
     margin: 4vh;
 }
 .hd>img {
@@ -120,7 +120,7 @@ button {
     font-size: 4vh;
     border-radius: 0.4em;
     font-family: 'Bellota', cursive;
-    font-weight: 600;
+    font-weight: 500;
     transition: all 0.3s ease;
     position: relative;
     display: inline-block;
@@ -151,7 +151,7 @@ button:hover {
     font-size: 4vh;
     border-radius: 0.4em;
     font-family: 'Bellota', cursive;
-    font-weight: 600;
+    font-weight: 500;
     transition: all 0.3s ease;
     position: relative;
     display: inline-block;
@@ -203,7 +203,7 @@ article {
 
 aside {
     width: 40%;
-    height: 100vh;
+    height: fit-content;
     justify-self: end;
 }
 
@@ -229,6 +229,44 @@ footer {
     align-items: start;
     font-size: 2vh;
     margin-left: 2%;
+}
+
+.comment{
+    background-color: #f9eded;
+    width: 80%;
+    height: fit-content;
+    margin: 2vh;
+    padding: 1vh;
+    border-radius: 0.4em;
+}
+.newbutton{
+    width: 20%;
+    height: 10vh;
+    margin: 1vh;
+    justify-self: end;
+}
+#comment_name{
+    font-family: 'Bellota', cursive;
+    font-weight: 400;
+    color: rgb(128, 28, 28);
+    font-size: 4vh;
+}
+#comment_text{
+    font-family: 'Bellota', cursive;
+    font-weight: 400;
+    color: rgb(78, 24, 24);
+    font-size: 3.5vh;
+}
+#back{
+    display: flex;
+    justify-content: center;
+    height: fit-content;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    background-color: #FFDDD2;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 #kirieshka1 {
@@ -350,9 +388,7 @@ footer {
     }
 }
 @media only screen and (min-device-width: 525px) and (max-device-width: 855px) {
-    aside {
-        height: 150vh;
-    }
+
     button{
         font-size: 2.5vh;
     }
@@ -365,9 +401,7 @@ footer {
 }
 
 @media only screen and (min-device-width: 0px) and (max-device-width: 525px) {
-    aside {
-        height: 200vh;
-    }
+
 
     section {
         height: 100vh;
