@@ -54,3 +54,5 @@ class Comment(models.Model):
         name = models.CharField(max_length=20)
         date = models.DateField()
         text = models.CharField(max_length=500)
+        def __str__(self):
+                return f'{self.name, self.date, self.text}'

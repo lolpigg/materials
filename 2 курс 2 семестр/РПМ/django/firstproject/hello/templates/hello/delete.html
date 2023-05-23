@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Удалить комментарий</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style/main.css'%}" type="text/css">
+</head>
+<body class="aut_body">
+    <form class="form1" method="post">
+        {% csrf_token %}
+        <p class="text">Подтвердите удаление</p>
+        <input class="but" type="submit" value="Удалить">
+    </form>
+    <a href="/"><button class="but">Отменить удаление</button></a>
+</body>
+</html>

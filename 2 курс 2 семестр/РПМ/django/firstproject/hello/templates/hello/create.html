@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить комментарий</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style/main.css'%}" type="text/css">
+</head>
+<body class="aut_body">
+    <form class="form1" method="post">
+        <p>Дата в формате ГГГГ-ММ-ДД</p>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="but" type = "submit" value = 'Добавить'>
+    </form>
+    {% for comment in comments%}
+    <a href="../{{comment.id}}"><button class="newbutton">Комментарий #{{comment.id}}</button></a>
+    {% endfor %}
+</body>
+</html>

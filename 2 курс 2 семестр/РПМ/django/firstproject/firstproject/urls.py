@@ -16,11 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from hello.views import contacti
-from hello.views import main_menu
-from hello.views import arenda
-from hello.views import o_nas
-from hello.views import pravila
+from hello.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +26,10 @@ urlpatterns = [
     path('arenda.html',arenda),
     path('o_nas.html',o_nas),
     path('pravila.html',pravila),
+    path('create/', create_view),
+    path('update/<int:id>', update_view),
     path('accounts/',include('django.contrib.auth.urls')),
-    path('home/', include('hello.urls'))
+    path('home/', include('hello.urls')),
+    path('<int:id>/', comment_detail_view),
+    path('delete/<int:id>/', delete_view)
 ]

@@ -1,5 +1,6 @@
 from django.shortcuts import *
 from django.urls import reverse_lazy
+from django.http import *
 from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from .models import *
@@ -37,10 +38,49 @@ def create_view(request):
             return redirect('/')
     else:
         form = CommentForm()
+        comments = Comment.objects.order_by('id')
+        context = {
+            'form':form,
+            'comments':comments
+        }
+        return render(request, 'hello/create.html', context)
+
+def comment_detail_view(request, id):
+    try:
+        data = Comment.objects.get(id=id)
+    except CommentForm.DoesNotExist:
+        raise Http404('Такого не существует')
+    return render(request, 'hello/detailview.html', {'data':data})
+
+def update_view(request, id):
+    try:
+        old_data = get_object_or_404(Comment, id=id)
+    except CommentForm.DoesNotExist:
+        raise Http404('Такого не существует')
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance = old_data)
+        if form.is_valid():
+            form.save()
+            return redirect(f'/{id}')
+    else:
+        form = CommentForm(instance = old_data)
         context = {
             'form':form
         }
-    return render(request, 'hello/create.html', context)
+        return render(request, 'hello/update.html', context)
+    
+def delete_view(request, id):
+    try:
+        data = get_object_or_404(Comment, id=id)
+    except CommentForm.DoesNotExist:
+        raise Http404('Такого не существует')
+
+    if request.method == 'POST':
+        data.delete()
+        return redirect('/')
+    else:
+        return render(request, 'hello/delete.html')
 class SignUp(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')

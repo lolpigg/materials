@@ -45,13 +45,13 @@
         <div class="comment">
             <p id="comment_name">{{comment.name}} - {{comment.date}}</p>
             <p id="comment_text">{{comment.text}}</p>
+            {% if user.is_authenticated %}
+            <a href="update/{{comment.id}}"><button class="newbutton">Изменить комментарий</button></a>
+            <a href="delete/{{comment.id}}"><button class="newbutton" href="">Удалить комментарий</button></a>
+            {% endif %}
         </div>
     {% endfor %}
-    <button class="newbutton" href="">Добавить комментарий</button>
-    {% if user.is_authenticated %}
-    <button class="newbutton" href="">Изменить комментарий</button>
-    <button class="newbutton" href="">Удалить комментарий</button>
-    {% endif %}
+    <a href="create/"><button class="newbutton">Добавить комментарий</button></a>
     </div>
     {% include 'includes/footer.html' %}
 </body>

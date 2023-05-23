@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детальный просмотр</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style/main.css'%}" type="text/css">
+</head>
+<body>
+    <div class="backg">
+        <h3>Name: {{data.name}}</h3>
+        <h3>Date: {{data.date}}</h3>
+        <h3>Text: {{data.text}}</h3>
+    </div>
+</body>
+</html>
