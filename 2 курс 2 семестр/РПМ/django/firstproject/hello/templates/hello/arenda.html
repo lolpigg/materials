@@ -21,10 +21,10 @@
     <div class="cabinets">
         {% for room in rooms %}
         <div class="cabtext">
-            <img src="{{room.href_img}}">
+            <img src="{{room.href_img.url}}">
             <p>{{room.name}}</p>
-            <p>Будни - {{room.workdays_price}}/час</p>
-            <p>Выходные - {{room.weekends_price}}/час</p>
+            <p>Цена - {{room.price}}/час</p>
+            <a><button class="but">Зарезервировать комнату</button></a>
         </div>
         {% endfor %}
     </div>

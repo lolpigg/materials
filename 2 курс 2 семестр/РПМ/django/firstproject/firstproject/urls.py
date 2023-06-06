@@ -15,8 +15,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path,include,re_path
 from hello.views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,5 +33,9 @@ urlpatterns = [
     path('accounts/',include('django.contrib.auth.urls')),
     path('home/', include('hello.urls')),
     path('<int:id>/', comment_detail_view),
-    path('delete/<int:id>/', delete_view)
+    path('delete/<int:id>/', delete_view),
+    re_path(r'^cart/', include(('cart.urls','cart'),namespace='cart')),
+    re_path('', include(('hello.urls', 'hello'), namespace='hello'))
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

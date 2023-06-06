@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import CreateView
 from .models import *
 from .forms import *
+from cart.forms import CartAddProductForm
 
 # Create your views here.
 def main_menu(request):
@@ -81,6 +82,18 @@ def delete_view(request, id):
         return redirect('/')
     else:
         return render(request, 'hello/delete.html')
+def room_list(request, category_slug=None):
+    category = None
+    categories = Category.objects.all()
+    rooms = Room.objects.filter(available=True)
+    if category_slug:
+        category = get_object_or_404(Category, slug=category_slug)
+        rooms = rooms.filter(category=category)
+    return render(request, 'shop/room/list.html', {'category':category, 'categories':categories, 'rooms':rooms})
+def room_detail(request, id, slug):
+    room = get_object_or_404(Room, id=id, slug=slug, available=True)
+    cart_room_form = CartAddProductForm()
+    return render(request,'shop/room/detail.html', {'room':room, 'cart_room_form':cart_room_form})
 class SignUp(CreateView):
     form_class = UserCreationForm
     success_url = reverse_lazy('login')

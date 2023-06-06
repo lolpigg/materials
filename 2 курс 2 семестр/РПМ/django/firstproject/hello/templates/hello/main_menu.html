@@ -52,6 +52,7 @@
         </div>
     {% endfor %}
     <a href="create/"><button class="newbutton">Добавить комментарий</button></a>
+    <a href="{% url 'room_list' %}"><button class="newbutton">Перейти к комнатам</button></a>
     </div>
     {% include 'includes/footer.html' %}
 </body>

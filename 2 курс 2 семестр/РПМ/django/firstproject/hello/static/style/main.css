@@ -314,6 +314,7 @@ footer {
     height: fit-content;
     text-align: center;
     font-size: 4vh;
+    margin: 2vh;
 }
 .cabtext > p{
     font-family: 'Bellota', cursive;
@@ -382,6 +383,15 @@ footer {
     align-items: center;
     flex-direction: column;
     flex-wrap: wrap;
+}
+.card{
+    width: 100%;
+    font-family: 'Bellota', cursive;
+    font-weight: 600;
+    color: rgb(128, 28, 28);
+    font-size: 4vh;
+    margin: 0.5vh;
+    text-align: center;
 }
 #manager_text > p{
     text-align: center;

@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List</title>
+    <link rel="stylesheet" href="{% static 'style/main.css'%}" type="text/css">
+    <link rel="shortcut icon" href="{% static 'images/main_ico.ico'%}" type="image/x-icon">
+</head>
+<body class="aut_body">
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Rooms{% endif %}
+{% endblock %}
+{% block content %}
+        <h3>Categories</h3>
+        <ul>
+            <li {% if not category %} class="selected" {% endif %}>
+                <a href="{% url 'room_list' %}">All</a>
+            </li>
+            {% for c in categories %}
+            <li {% if category.slug == c.slug %} class="selected" {% endif %}>
+                <a href="{{ c.get_absolute_url }}"> {{ c.name }}</a>
+            </li>
+{% endfor %}
+        </ul>
+        <div class="row">
+            {% comment %} <h1>{% if category %}{{ category.name }}{% else %}Rooms{% endif %}</h1> {% endcomment %}
+            {% for room in rooms %}
+            <div class="card">
+                <img src="{% if room.href_img %}{{ room.href_img.url }}{% else %}{% static 'images/no_image.png' %}{% endif %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{ room.name }}</h5>
+                    <p class="card-text">Цена - {{room.price}}/час</p>
+                    <a href="{{ room.get_absolute_url }}" class="btn btn-primary"><button class="newbutton">Перейти к комнате</button></a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </body>
+{% endblock %}
+
+</html>
