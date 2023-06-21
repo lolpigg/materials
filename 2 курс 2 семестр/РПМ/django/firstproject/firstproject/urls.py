@@ -34,8 +34,9 @@ urlpatterns = [
     path('home/', include('hello.urls')),
     path('<int:id>/', comment_detail_view),
     path('delete/<int:id>/', delete_view),
-    re_path(r'^cart/', include(('cart.urls','cart'),namespace='cart')),
-    re_path('', include(('hello.urls', 'hello'), namespace='hello'))
+    re_path(r'^cart/', include(('cart.urls','cart'), namespace='cart')),
+    re_path('', include(('hello.urls', 'hello'), namespace='hello')),
+    re_path(r'^orders/', include(('orders.urls', 'orders'), namespace='orders'))
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -37,11 +37,11 @@ class CategoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Log, LogAdmin)
-admin.site.register(Room, RoomAdmin)
 admin.site.register(Social_Media, Social_MediaAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(Contact, ContactAdmin)
 admin.site.register(Price, PriceAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Room, RoomAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Manager, ManagerAdmin)

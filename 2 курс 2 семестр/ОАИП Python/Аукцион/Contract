@@ -1,0 +1,396 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+//import "./Role/AccessControl.sol";
+contract Data{
+    bytes32 internal constant ADMIN_ROLE = keccak256(bytes("ADMIN"));
+    bytes32 internal constant USER_ROLE = keccak256(bytes("USER"));
+    bytes32 internal constant BANK_ROLE = keccak256(bytes("BANK"));
+    bytes32 internal constant SHOP_ROLE = keccak256(bytes("SHOP"));
+    bytes32 internal constant SELLER_ROLE = keccak256(bytes("SELLER"));
+    bytes32 internal constant BUYER_ROLE = keccak256(bytes("BUYER"));
+    bytes32 internal constant DELIVER_ROLE = keccak256(bytes("DELIVER"));
+    bytes32[] public ROLES = [ADMIN_ROLE, USER_ROLE, BANK_ROLE, SHOP_ROLE, SELLER_ROLE, BUYER_ROLE, DELIVER_ROLE];
+    struct User{
+        string fio;
+        address adr;
+        bytes32 secret_word;
+        string login;
+        bytes32 password;
+        bytes32 role;
+    }
+    User[] public users;
+    User[] public shops;
+    mapping (address => User) worker_shop;
+    struct Feedback{
+        uint user_id;
+        uint shop_id;
+        string name;
+        string description;
+        uint16 mark;
+        address[] like_list;
+        address[] dislike_list;
+    }
+    Feedback[] public feedbacks;
+    struct AnswerOnFeedback{
+        uint worker_id;
+        uint feedback_source_id;
+        string name;
+        string description;
+        address[] like_list;
+        address[] dislike_list;
+    }
+    AnswerOnFeedback[] public answers;
+    struct Request{
+        uint user_id;
+        uint wanted_role_id;
+        string description;
+        bool IsEnabled;
+    }
+    Request[] public requests;
+}
+contract Logic is Data {
+    constructor() {
+        User memory newuser = User({
+            fio : "admin admin admin",
+            adr : msg.sender,
+            secret_word : keccak256(bytes("admin")),
+            login : "admin",
+            password : keccak256(bytes("admin")),
+            role : ADMIN_ROLE
+        });
+        users.push(newuser);
+    }
+    function user_register(string memory _admin_login, string memory _admin_password, address _user_adr, string memory _admin_word, string memory _user_word, string memory _user_login, string memory _user_password, uint _user_role_id, uint _shop_id, string memory _fio) public{
+        bool Aut;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_admin_login, users[i].login)
+            && users[i].secret_word == keccak256(bytes(_admin_word))
+            && keccak256(bytes(_admin_password)) == users[i].password
+            && users[i].role == ADMIN_ROLE){
+                Aut = true;
+               break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or user is not admin.");
+        bool Found;
+        for (uint i = 0; i < users.length; i++){
+            if (users[i].adr == _user_adr){
+                Found = true;
+                break;
+            }
+        }
+        require(!Found, "This person is already exist!");
+        User memory newuser = User({
+            fio : _fio,
+            adr :_user_adr,
+            secret_word : keccak256(bytes(_user_word)),
+            login : _user_login,
+            password : keccak256(bytes(_user_password)),
+            role : ROLES[_user_role_id]
+        });
+        users.push(newuser);
+        if (newuser.role == SELLER_ROLE){
+            worker_shop[newuser.adr] = shops[_shop_id];
+        }
+        if (newuser.role == SHOP_ROLE){
+            shops.push(newuser);
+        }
+    }
+    function change_role(string memory _admin_login, string memory _admin_password, address _user_adr, string memory _admin_word, uint _user_role_id, uint _shop_id) public {
+        bool Aut;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_admin_login, users[i].login)
+            && users[i].secret_word == keccak256(bytes(_admin_word))
+            && keccak256(bytes(_admin_password)) == users[i].password
+            && users[i].role == ADMIN_ROLE){
+                Aut = true;
+               break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or user is not admin.");
+        bool Found;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (users[i].adr == _user_adr){
+                Found = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Found, "That person does not exist!");
+        if (users[user_index].role == SHOP_ROLE && ROLES[_user_role_id] != SHOP_ROLE){
+            uint shop_id = 1000000;
+            bool Found2;
+            for (uint i = 0; i < shops.length; i++){
+                    if (shops[i].adr == users[user_index].adr){
+                        shop_id = i;
+                    }
+                    Found2 = true;
+            }
+            require(Found2, "Not found shop id!");
+            for (uint i = 0; i < users.length; i++){
+                if (worker_shop[users[i].adr].adr == shops[shop_id].adr){
+                    users[i].role = BUYER_ROLE;
+                }
+            }
+        }
+        users[user_index].role = ROLES[_user_role_id];
+        if (users[user_index].role == SELLER_ROLE){
+            worker_shop[users[user_index].adr] = shops[_shop_id];
+        }
+    }
+    function add_feedback(string memory _login, string memory _password, string memory _secret_word, string memory _name, string memory _description, uint16 _mark, uint _shop_id) public {
+        require(_mark <= 10, "Incorrect mark! It should be between 0 and 10.");
+        bool Aut;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_login, users[i].login)
+            && users[i].secret_word == keccak256(bytes(_secret_word))
+            && keccak256(bytes(_password)) == users[i].password
+            && users[i].role != BUYER_ROLE){
+                Aut = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or you are not a buyer.");
+        require(users[_shop_id].role == SHOP_ROLE, "This id is not a shop!");
+        address[] memory a;
+        Feedback memory fb = Feedback ({
+            user_id : user_index,
+            shop_id : _shop_id,
+            name : _name,
+            description : _description,
+            mark : _mark,
+            like_list : a,
+            dislike_list : a
+        });
+        feedbacks.push(fb);
+    }
+    function add_answer(string memory _login, string memory _password, string memory _secret_word, string memory _name, string memory _description, uint _feedback_id) public {
+        bool Aut = false;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_login, users[i].login)
+            && users[i].secret_word == keccak256(bytes(_secret_word))
+            && keccak256(bytes(_password)) == users[i].password
+            && (users[i].role == SELLER_ROLE || users[i].role == BUYER_ROLE)){
+                Aut = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or you are not a seller!");
+        if (users[user_index].role == SELLER_ROLE)
+        {
+            bool IsThisShopWorker = false;
+            uint _shop_id = feedbacks[_feedback_id].shop_id;
+            if (worker_shop[users[user_index].adr].adr == shops[_shop_id].adr){
+                IsThisShopWorker = true;
+            }
+            require(IsThisShopWorker, "You are not a worker of THIS shop.");
+        }
+        address[] memory a;
+        AnswerOnFeedback memory ab = AnswerOnFeedback ({
+            worker_id : user_index,
+            feedback_source_id : _feedback_id,
+            name : _name,
+            description : _description,
+            like_list : a,
+            dislike_list : a
+        });
+        answers.push(ab);
+    }
+    function add_like(string memory _login, string memory _password, string memory _secret_word, uint target_id, bool IsAnswer) public {
+        bool Aut;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_login, users[i].login)
+            && users[i].secret_word == keccak256(bytes(_secret_word))
+            && keccak256(bytes(_password)) == users[i].password){
+                Aut = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password!");
+        if (IsAnswer){
+            bool Cont;
+            for (uint i = 0; i < answers[target_id].like_list.length; i++){
+                if (users[user_index].adr == answers[target_id].like_list[i]){
+                    Cont = true;
+                    break;
+                }
+            }
+            require(!Cont, "You are already liked this answer!");
+            answers[target_id].like_list.push();
+            for (uint i = 0; i < answers[target_id].dislike_list.length; i++){
+                if (users[user_index].adr == answers[target_id].dislike_list[i]){
+                    delete answers[target_id].dislike_list[i];
+                }
+            }
+        } else{
+            bool Cont;
+            for (uint i = 0; i < feedbacks[target_id].like_list.length; i++){
+                if (users[user_index].adr == feedbacks[target_id].like_list[i]){
+                    Cont = true;
+                    break;
+                }
+            }
+            require(!Cont, "You are already liked this feedback!");
+            feedbacks[target_id].like_list.push();
+            for (uint i = 0; i < feedbacks[target_id].dislike_list.length; i++){
+                if (users[user_index].adr == feedbacks[target_id].dislike_list[i]){
+                    delete feedbacks[target_id].dislike_list[i];
+                }
+            }
+        }
+    }
+    function add_dislike(string memory _login, string memory _password, string memory _secret_word, uint target_id, bool IsAnswer) public {
+        bool Aut;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_login, users[i].login)
+            && users[i].secret_word == keccak256(bytes(_secret_word))
+            && keccak256(bytes(_password)) == users[i].password){
+                Aut = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password!");
+        if (IsAnswer){
+            bool Cont;
+            for (uint i = 0; i < answers[target_id].dislike_list.length; i++){
+                if (users[user_index].adr == answers[target_id].dislike_list[i]){
+                    Cont = true;
+                    break;
+                }
+            }
+            require(!Cont, "You are already disliked this answer!");
+            answers[target_id].dislike_list.push();
+            for (uint i = 0; i < answers[target_id].like_list.length; i++){
+                if (users[user_index].adr == answers[target_id].like_list[i]){
+                    delete answers[target_id].like_list[i];
+                }
+            }
+        } else{
+            bool Cont;
+            for (uint i = 0; i < feedbacks[target_id].dislike_list.length; i++){
+                if (users[user_index].adr == feedbacks[target_id].dislike_list[i]){
+                    Cont = true;
+                    break;
+                }
+            }
+            require(!Cont, "You are already disliked this feedback!");
+            feedbacks[target_id].dislike_list.push();
+            for (uint i = 0; i < feedbacks[target_id].like_list.length; i++){
+                if (users[user_index].adr == feedbacks[target_id].like_list[i]){
+                    delete feedbacks[target_id].like_list[i];
+                }
+            }
+        }
+    }
+    function see_likes(uint target_id, bool IsAnswer) public view returns (uint) {
+        if (IsAnswer){
+            return answers[target_id].like_list.length;
+        } else {
+            return feedbacks[target_id].like_list.length;
+        }
+    }
+    function see_dislikes(uint target_id, bool IsAnswer) public view returns (uint) {
+        if (IsAnswer){
+            return answers[target_id].dislike_list.length;
+        } else {
+            return feedbacks[target_id].dislike_list.length;
+        }
+    }
+    function see_info() public view returns(string memory, string memory, address){
+        for (uint i = 0; i < users.length; i++){
+            if (users[i].adr == msg.sender){
+                User memory user = users[i];
+                return (user.fio, user.login, user.adr);
+            }
+        }
+        return ("not found", "not found", msg.sender);
+    }
+    function see_balance() public view returns (uint){
+        return msg.sender.balance;
+    }
+    function add_request(string memory _secret_word, string memory _login, string memory _password, uint _role_id, string memory _description) public{
+        bool Aut;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_login, users[i].login)
+            && users[i].secret_word == keccak256(bytes(_secret_word))
+            && keccak256(bytes(_password)) == users[i].password ){
+                Aut = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or you are not a buyer.");
+        Request memory request = Request({
+            user_id : user_index,
+            wanted_role_id : _role_id,
+            description : _description,
+            IsEnabled : true
+        });
+        requests.push(request);
+    }
+    function answer_on_request(string memory _admin_login, string memory _admin_password, string memory _admin_word, uint _request_id, bool _answer) public{
+        bool Aut;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_admin_login, users[i].login)
+            && users[i].secret_word == keccak256(bytes(_admin_word))
+            && keccak256(bytes(_admin_password)) == users[i].password
+            && users[i].role == ADMIN_ROLE){
+                Aut = true;
+               break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or user is not admin.");
+        requests[_request_id].IsEnabled = false;
+        if (_answer){
+            users[requests[_request_id].user_id].role = ROLES[requests[_request_id].wanted_role_id];
+        }
+    }
+    function switchToBuyer(string memory _secret_word, string memory _login, string memory _password) public{
+        bool Aut = false;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_login, users[i].login)
+            && users[i].secret_word == keccak256(bytes(_secret_word))
+            && keccak256(bytes(_password)) == users[i].password
+            && (users[i].role == SELLER_ROLE || users[i].role == ADMIN_ROLE)){
+                Aut = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or you are not a Admin or seller!");
+        users[user_index].role = BUYER_ROLE;
+    }
+    function stringsEquals(string memory s1, string memory s2) private pure returns (bool) {
+        bytes memory b1 = bytes(s1);
+        bytes memory b2 = bytes(s2);
+        uint256 l1 = b1.length;
+        if (l1 != b2.length) return false;
+        for (uint256 i=0; i<l1; i++) {
+            if (b1[i] != b2[i]) return false;
+        }
+        return true;
+    }
+
+    function bytes32ToString(bytes32 _bytes32) private pure returns (string memory) {
+            uint8 i = 0;
+            while(i < 32 && _bytes32[i] != 0) {
+                i++;
+            }
+            bytes memory bytesArray = new bytes(i);
+            for (i = 0; i < 32 && _bytes32[i] != 0; i++) {
+                bytesArray[i] = _bytes32[i];
+            }
+            return string(bytesArray);
+    }
+}

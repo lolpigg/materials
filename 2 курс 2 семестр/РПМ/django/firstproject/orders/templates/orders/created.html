@@ -1,0 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Спасибо за покупку!</title>
+    <link rel="stylesheet" href="{% static 'style/main.css'%}" type="text/css">
+    <link rel="shortcut icon" href="{% static 'images/main_ico.ico'%}" type="image/x-icon">
+</head>
+<body class="aut_body">
+<h1 class="text">Спасибо!</h1>
+<p class="text">Ваш заказ был успешно принят в обработку. Номер вашего заказа: <strong class="text">{{order.id}}</strong>.</p>
+<a href="{% url 'orders:test_send' %}"><button class="newbutton">Отправить чек на почту</button></a>
+</body>

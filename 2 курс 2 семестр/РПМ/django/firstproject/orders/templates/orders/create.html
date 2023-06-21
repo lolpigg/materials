@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оформление заказа</title>
+    <link rel="stylesheet" href="{% static 'style/main.css'%}" type="text/css">
+    <link rel="shortcut icon" href="{% static 'images/main_ico.ico'%}" type="image/x-icon">
+</head>
+<body class="aut_body">
+<h1 class="text">Введите свои данные</h1>
+<div class="card">
+    <h3>Ваш заказ</h3>
+    <ul>
+        {% for item in cart %}
+        <p>
+            {{ item.quantity }}x {{item.product.name}}
+            <span>{{ item.total_price }} рублей</span>
+        </p>
+        {% endfor %}
+        <p>Всего: {{ cart.get_total_price }} рублей</p>
+    </ul>
+    <form action="." method="post" class="order-form">
+        {{ form.as_p }}
+        <p><input id="but2" type="submit" value="Подтвердить"></p>
+        {% csrf_token %}
+    </form>
+</div>
+</body>
