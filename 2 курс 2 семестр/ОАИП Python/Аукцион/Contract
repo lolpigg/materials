@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 //import "./Role/AccessControl.sol";
-contract Data{
-    bytes32 internal constant ADMIN_ROLE = keccak256(bytes("ADMIN"));
+contract Logic {
+       bytes32 internal constant ADMIN_ROLE = keccak256(bytes("ADMIN"));
     bytes32 internal constant USER_ROLE = keccak256(bytes("USER"));
     bytes32 internal constant BANK_ROLE = keccak256(bytes("BANK"));
     bytes32 internal constant SHOP_ROLE = keccak256(bytes("SHOP"));
@@ -47,8 +47,6 @@ contract Data{
         bool IsEnabled;
     }
     Request[] public requests;
-}
-contract Logic is Data {
     constructor() {
         User memory newuser = User({
             fio : "admin admin admin",

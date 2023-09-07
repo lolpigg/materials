@@ -1,47 +1,803 @@
-@echo off
-Setlocal EnableDelayedExpansion
-chcp 65001
-:start
-set /P num=Введите число от 4 до 9:
-set /A num1=%num%
-if "%num1%" LSS "4" if %num1% GTR "9" goto start
-if "%num1%" GEQ "4" if %num1% LEQ "9" goto files
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+//import "./Role/AccessControl.sol";
+contract Data{
+    bytes32 internal constant ADMIN_ROLE = keccak256(bytes("ADMIN"));
+    bytes32 internal constant USER_ROLE = keccak256(bytes("USER"));
+    bytes32 internal constant BANK_ROLE = keccak256(bytes("BANK"));
+    bytes32 internal constant SHOP_ROLE = keccak256(bytes("SHOP"));
+    bytes32 internal constant SELLER_ROLE = keccak256(bytes("SELLER"));
+    bytes32 internal constant BUYER_ROLE = keccak256(bytes("BUYER"));
+    bytes32 internal constant DELIVER_ROLE = keccak256(bytes("DELIVER"));
+    bytes32[] public ROLES = [ADMIN_ROLE, USER_ROLE, BANK_ROLE, SHOP_ROLE, SELLER_ROLE, BUYER_ROLE, DELIVER_ROLE];
+    struct User{
+        string fio;
+        address adr;
+        bytes32 secret_word;
+        string login;
+        bytes32 password;
+        bytes32 role;
+    }
+    User[] public users;
+    User[] public shops;
+    mapping (address => User) worker_shop;
+    struct Feedback{
+        uint user_id;
+        uint shop_id;
+        string name;
+        string description;
+        uint16 mark;
+        address[] like_list;
+        address[] dislike_list;
+    }
+    Feedback[] public feedbacks;
+    struct AnswerOnFeedback{
+        uint worker_id;
+        uint feedback_source_id;
+        string name;
+        string description;
+        address[] like_list;
+        address[] dislike_list;
+    }
+    AnswerOnFeedback[] public answers;
+    struct Request{
+        uint user_id;
+        uint wanted_role_id;
+        string description;
+        bool IsEnabled;
+    }
+    Request[] public requests;
+}
+contract Logic is Data {
+    constructor() {
+        User memory newuser = User({
+            fio : "admin admin admin",
+            adr : msg.sender,
+            secret_word : keccak256(bytes("admin")),
+            login : "admin",
+            password : keccak256(bytes("admin")),
+            role : ADMIN_ROLE
+        });
+        users.push(newuser);
+    }
+    function user_register(string memory _admin_login, string memory _admin_password, address _user_adr, string memory _admin_word, string memory _user_word, string memory _user_login, string memory _user_password, uint _user_role_id, uint _shop_id, string memory _fio) public{
+        bool Aut;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_admin_login, users[i].login) 
+            && users[i].secret_word == keccak256(bytes(_admin_word))
+            && keccak256(bytes(_admin_password)) == users[i].password 
+            && users[i].role == ADMIN_ROLE){
+                Aut = true;
+               break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or user is not admin.");
+        bool Found;
+        for (uint i = 0; i < users.length; i++){
+            if (users[i].adr == _user_adr){
+                Found = true;
+                break;
+            }
+        }
+        require(!Found, "This person is already exist!");
+        User memory newuser = User({
+            fio : _fio,
+            adr :_user_adr,
+            secret_word : keccak256(bytes(_user_word)),
+            login : _user_login,
+            password : keccak256(bytes(_user_password)),
+            role : ROLES[_user_role_id]
+        });
+        users.push(newuser);
+        if (newuser.role == SELLER_ROLE){
+            worker_shop[newuser.adr] = shops[_shop_id];
+        }
+        if (newuser.role == SHOP_ROLE){
+            shops.push(newuser);
+        }
+    }
+    function change_role(string memory _admin_login, string memory _admin_password, address _user_adr, string memory _admin_word, uint _user_role_id, uint _shop_id) public {
+        bool Aut;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_admin_login, users[i].login) 
+            && users[i].secret_word == keccak256(bytes(_admin_word))
+            && keccak256(bytes(_admin_password)) == users[i].password 
+            && users[i].role == ADMIN_ROLE){
+                Aut = true;
+               break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or user is not admin.");
+        bool Found;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (users[i].adr == _user_adr){
+                Found = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Found, "That person does not exist!");
+        if (users[user_index].role == SHOP_ROLE && ROLES[_user_role_id] != SHOP_ROLE){
+            uint shop_id = 1000000;
+            bool Found2;
+            for (uint i = 0; i < shops.length; i++){
+                    if (shops[i].adr == users[user_index].adr){
+                        shop_id = i;
+                    }
+                    Found2 = true;
+            }
+            require(Found2, "Not found shop id!");
+            for (uint i = 0; i < users.length; i++){
+                if (worker_shop[users[i].adr].adr == shops[shop_id].adr){
+                    users[i].role = BUYER_ROLE;
+                }
+            }
+        }
+        users[user_index].role = ROLES[_user_role_id];
+        if (users[user_index].role == SELLER_ROLE){
+            worker_shop[users[user_index].adr] = shops[_shop_id];
+        }
+    }
+    function add_feedback(string memory _login, string memory _password, string memory _secret_word, string memory _name, string memory _description, uint16 _mark, uint _shop_id) public {
+        require(_mark <= 10, "Incorrect mark! It should be between 0 and 10.");
+        bool Aut;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_login, users[i].login) 
+            && users[i].secret_word == keccak256(bytes(_secret_word))
+            && keccak256(bytes(_password)) == users[i].password 
+            && users[i].role != BUYER_ROLE){
+                Aut = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or you are not a buyer.");
+        require(users[_shop_id].role == SHOP_ROLE, "This id is not a shop!");
+        address[] memory a;
+        Feedback memory fb = Feedback ({
+            user_id : user_index,
+            shop_id : _shop_id,
+            name : _name,
+            description : _description,
+            mark : _mark,
+            like_list : a,
+            dislike_list : a
+        });
+        feedbacks.push(fb);
+    }
+    function add_answer(string memory _login, string memory _password, string memory _secret_word, string memory _name, string memory _description, uint _feedback_id) public {
+        bool Aut = false;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_login, users[i].login) 
+            && users[i].secret_word == keccak256(bytes(_secret_word))
+            && keccak256(bytes(_password)) == users[i].password 
+            && (users[i].role == SELLER_ROLE || users[i].role == BUYER_ROLE)){
+                Aut = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or you are not a seller!");
+        if (users[user_index].role == SELLER_ROLE)
+        {
+            bool IsThisShopWorker = false;
+            uint _shop_id = feedbacks[_feedback_id].shop_id;
+            if (worker_shop[users[user_index].adr].adr == shops[_shop_id].adr){
+                IsThisShopWorker = true;
+            }
+            require(IsThisShopWorker, "You are not a worker of THIS shop.");
+        }
+        address[] memory a;
+        AnswerOnFeedback memory ab = AnswerOnFeedback ({
+            worker_id : user_index,
+            feedback_source_id : _feedback_id,
+            name : _name,
+            description : _description,
+            like_list : a,
+            dislike_list : a
+        });
+        answers.push(ab);
+    }
+    function add_like(string memory _login, string memory _password, string memory _secret_word, uint target_id, bool IsAnswer) public {
+        bool Aut;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_login, users[i].login) 
+            && users[i].secret_word == keccak256(bytes(_secret_word))
+            && keccak256(bytes(_password)) == users[i].password){
+                Aut = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password!");
+        if (IsAnswer){
+            bool Cont;
+            for (uint i = 0; i < answers[target_id].like_list.length; i++){
+                if (users[user_index].adr == answers[target_id].like_list[i]){
+                    Cont = true;
+                    break;
+                }
+            }
+            require(!Cont, "You are already liked this answer!");
+            answers[target_id].like_list.push();
+            for (uint i = 0; i < answers[target_id].dislike_list.length; i++){
+                if (users[user_index].adr == answers[target_id].dislike_list[i]){
+                    delete answers[target_id].dislike_list[i];
+                }
+            }
+        } else{
+            bool Cont;
+            for (uint i = 0; i < feedbacks[target_id].like_list.length; i++){
+                if (users[user_index].adr == feedbacks[target_id].like_list[i]){
+                    Cont = true;
+                    break;
+                }
+            }
+            require(!Cont, "You are already liked this feedback!");
+            feedbacks[target_id].like_list.push();
+            for (uint i = 0; i < feedbacks[target_id].dislike_list.length; i++){
+                if (users[user_index].adr == feedbacks[target_id].dislike_list[i]){
+                    delete feedbacks[target_id].dislike_list[i];
+                }
+            }
+        }
+    }
+    function add_dislike(string memory _login, string memory _password, string memory _secret_word, uint target_id, bool IsAnswer) public {
+        bool Aut;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_login, users[i].login) 
+            && users[i].secret_word == keccak256(bytes(_secret_word))
+            && keccak256(bytes(_password)) == users[i].password){
+                Aut = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password!");
+        if (IsAnswer){
+            bool Cont;
+            for (uint i = 0; i < answers[target_id].dislike_list.length; i++){
+                if (users[user_index].adr == answers[target_id].dislike_list[i]){
+                    Cont = true;
+                    break;
+                }
+            }
+            require(!Cont, "You are already disliked this answer!");
+            answers[target_id].dislike_list.push();
+            for (uint i = 0; i < answers[target_id].like_list.length; i++){
+                if (users[user_index].adr == answers[target_id].like_list[i]){
+                    delete answers[target_id].like_list[i];
+                }
+            }
+        } else{
+            bool Cont;
+            for (uint i = 0; i < feedbacks[target_id].dislike_list.length; i++){
+                if (users[user_index].adr == feedbacks[target_id].dislike_list[i]){
+                    Cont = true;
+                    break;
+                }
+            }
+            require(!Cont, "You are already disliked this feedback!");
+            feedbacks[target_id].dislike_list.push();
+            for (uint i = 0; i < feedbacks[target_id].like_list.length; i++){
+                if (users[user_index].adr == feedbacks[target_id].like_list[i]){
+                    delete feedbacks[target_id].like_list[i];
+                }
+            }
+        }
+    }
+    function see_likes(uint target_id, bool IsAnswer) public view returns (uint) {
+        if (IsAnswer){
+            return answers[target_id].like_list.length;
+        } else {
+            return feedbacks[target_id].like_list.length;
+        }
+    }
+    function see_dislikes(uint target_id, bool IsAnswer) public view returns (uint) {
+        if (IsAnswer){
+            return answers[target_id].dislike_list.length;
+        } else {
+            return feedbacks[target_id].dislike_list.length;
+        }
+    }
+    function see_info() public view returns(string memory, string memory, address){
+        for (uint i = 0; i < users.length; i++){
+            if (users[i].adr == msg.sender){
+                User memory user = users[i];
+                return (user.fio, user.login, user.adr);
+            }
+        }
+        return ("not found", "not found", msg.sender);
+    }
+    function see_balance() public view returns (uint){
+        return msg.sender.balance;
+    }
+    function add_request(string memory _secret_word, string memory _login, string memory _password, uint _role_id, string memory _description) public{
+        bool Aut;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_login, users[i].login) 
+            && users[i].secret_word == keccak256(bytes(_secret_word))
+            && keccak256(bytes(_password)) == users[i].password ){
+                Aut = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or you are not a buyer.");
+        Request memory request = Request({
+            user_id : user_index,
+            wanted_role_id : _role_id,
+            description : _description,
+            IsEnabled : true
+        });
+        requests.push(request);
+    }
+    function answer_on_request(string memory _admin_login, string memory _admin_password, string memory _admin_word, uint _request_id, bool _answer) public{
+        bool Aut;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_admin_login, users[i].login) 
+            && users[i].secret_word == keccak256(bytes(_admin_word))
+            && keccak256(bytes(_admin_password)) == users[i].password 
+            && users[i].role == ADMIN_ROLE){
+                Aut = true;
+               break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or user is not admin.");
+        requests[_request_id].IsEnabled = false;
+        if (_answer){
+            users[requests[_request_id].user_id].role = ROLES[requests[_request_id].wanted_role_id];
+        }
+    }
+    function switchToBuyer(string memory _secret_word, string memory _login, string memory _password) public{
+        bool Aut = false;
+        uint user_index;
+        for (uint i = 0; i < users.length; i++){
+            if (stringsEquals(_login, users[i].login) 
+            && users[i].secret_word == keccak256(bytes(_secret_word))
+            && keccak256(bytes(_password)) == users[i].password 
+            && (users[i].role == SELLER_ROLE || users[i].role == ADMIN_ROLE)){
+                Aut = true;
+                user_index = i;
+                break;
+            }
+        }
+        require(Aut, "Aut error. Wrong login or password, or you are not a Admin or seller!");
+        users[user_index].role = BUYER_ROLE;
+    }
+    function stringsEquals(string memory s1, string memory s2) private pure returns (bool) {
+        bytes memory b1 = bytes(s1);
+        bytes memory b2 = bytes(s2);
+        uint256 l1 = b1.length;
+        if (l1 != b2.length) return false;
+        for (uint256 i=0; i<l1; i++) {
+            if (b1[i] != b2[i]) return false;
+        }
+        return true;
+    }
 
-:files
-cd C:\Users\lolpigg\Desktop\
-for /l %%a in (1 1 %num1%) do (
-type nul > page%%a.bat
-)
-set /A num2=4
-set /A random=(%RANDOM%%%num1)+1
+    function bytes32ToString(bytes32 _bytes32) private pure returns (string memory) {
+            uint8 i = 0;
+            while(i < 32 && _bytes32[i] != 0) {
+                i++;
+            }
+            bytes memory bytesArray = new bytes(i);
+            for (i = 0; i < 32 && _bytes32[i] != 0; i++) {
+                bytesArray[i] = _bytes32[i];
+            }
+            return string(bytesArray);
+    }
+}
+# Позволяет изменять цвет текста
+import colorama
+from colorama import Fore, Back, Style
 
-if not num2==%random% goto lose
-if num2==%random% goto win
+# Работа с датой и временем
+import time, datetime
 
-:lose
-set /A num3=%num1%-1
-for /l %%a in (1 1 %num3%) do (
-echo @echo off > page%%a.bat
-echo chcp 65001 >> page%%a.bat
-echo cls >> page%%a.bat
-echo echo Загрузка...>> page%%a.bat
-echo timeout 3 /nobreak >> page%%a.bat
-echo color 1 >> page%%a.bat
-echo cls >> page%%a.bat
-echo echo Неправильно, попробуй еще раз. >> page%%a.bat
-echo timeout 7 /nobreak >> page%%a.bat
-)
 
-:win
-echo @echo off > page%num1%.bat
-echo chcp 65001 >> page%num1%.bat
-echo cls >> page%num1%.bat
-echo echo Загрузка...>> page%num1%.bat
-echo timeout 3 /nobreak >> page%num1%.bat
-echo color 2 >> page%num1%.bat
-echo cls >> page%num1%.bat
-echo echo Молодец, ты угадал.>> page%num1%.bat
-echo timeout 7 /nobreak >> page%num1%.bat
-echo del C:\Users\lolpigg\Desktop\*.bat >> page%num1%.bat
+# Работа с json файлами
+import json
 
-молодежный бульвар 9 2 подьезд 6 этаж домофон квартира 90
+from web3 import Web3
+
+from web3.middleware import geth_poa_middleware
+
+#Cоздаем экзмемпляр подключения
+web3 = Web3(Web3.HTTPProvider('http://127.0.0.1:7545'))
+
+# Считываем abi смарт-контракта и помещаем данные из файла в переменную abi
+with open("abi.txt", "r") as file:
+    abi = json.loads(file.read())
+
+# Адрес смарт-контракта
+address = "0x015D15A934D1B8F8120A9C1Ffa059a84B04D718D"
+
+# Указываем что это адрес контракта
+contract_address = Web3.to_checksum_address(address)
+
+web3.middleware_onion.inject(geth_poa_middleware, layer=0)
+
+# Создаем объект контракта
+contract = web3.eth.contract(address=address, abi=abi)
+def reg():
+    # получаем параметры от пользователя
+    admin_login = input('Введите логин администратора: ')
+    admin_password = input('Введите пароль администратора: ')
+    user_adr = input('Введите адрес пользователя: ')
+    admin_word = input('Введите секретное слово администратора: ')
+    user_word = input('Введите секретное слово пользователя: ')
+    user_login = input('Введите логин пользователя: ')
+    user_password = input('Введите пароль пользователя: ')
+    user_role_id = int(input('Введите ID роли пользователя: '))
+    while not isinstance(user_role_id, int):
+        try:
+            user_role_id = int(input('Введите ID роли пользователя: '))
+        except ValueError:
+            print('ID роли должен быть целым числом. Попробуйте еще раз.')
+
+    shop_id = int(input('Введите ID магазина: '))
+    while not isinstance(shop_id, int):
+        try:
+            shop_id = int(input('Введите ID магазина: '))
+        except ValueError:
+            print('ID магазина должен быть целым числом. Попробуйте еще раз.')
+    fio = input('Введите ФИО пользователя: ')
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.user_register(
+            admin_login,
+            admin_password,
+            user_adr,
+            admin_word,
+            user_word,
+            user_login,
+            user_password,
+            user_role_id,
+            shop_id,
+            fio
+        ).transact({'from': web3.eth.accounts[0]})
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+
+def chr():
+    # получаем параметры от пользователя
+    admin_login = input('Введите логин администратора: ')
+    admin_password = input('Введите пароль администратора: ')
+    user_adr = input('Введите адрес пользователя: ')
+    admin_word = input('Введите секретное слово администратора: ')
+    user_role_id = int(input('Введите ID роли пользователя: '))
+    while not isinstance(user_role_id, int):
+        try:
+            user_role_id = int(input('Введите ID роли пользователя: '))
+        except ValueError:
+            print('ID роли должен быть целым числом. Попробуйте еще раз.')
+
+    shop_id = int(input('Введите ID магазина: '))
+    while not isinstance(shop_id, int):
+        try:
+            shop_id = int(input('Введите ID магазина: '))
+        except ValueError:
+            print('ID магазина должен быть целым числом. Попробуйте еще раз.')
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.change_role(
+            admin_login,
+            admin_password,
+            user_adr,
+            admin_word,
+            user_role_id,
+            shop_id,
+        ).transact({'from': web3.eth.accounts[0]})
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+    # ожидаем подтверждения транзакции
+
+def fdb():
+    # получаем параметры от пользователя
+    admin_login = input('Введите логин: ')
+    admin_password = input('Введите пароль: ')
+    name = input('Введите название: ')
+    admin_word = input('Введите секретное слово: ')
+    description = input('Введите описание: ')
+    mark = input('Введите оценку: ')
+    while not isinstance(mark, int):
+        try:
+            mark = int(input('Введите оценку: '))
+        except ValueError:
+            print('Оценка должна быть целым числом. Попробуйте еще раз.')
+    shop_id = int(input('Введите ID магазина: '))
+    while not isinstance(shop_id, int):
+        try:
+            shop_id = int(input('Введите ID магазина: '))
+        except ValueError:
+            print('ID магазина должен быть целым числом. Попробуйте еще раз.')
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.add_feedback(
+            admin_login,
+            admin_password,
+            admin_word,
+            name,
+            description,
+            mark,
+            shop_id,
+        ).transact({'from': web3.eth.accounts[0]})
+
+        # ожидаем подтверждения транзакции
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+def a_fdb():
+    # получаем параметры от пользователя
+    admin_login = input('Введите логин: ')
+    admin_password = input('Введите пароль: ')
+    name = input('Введите название: ')
+    admin_word = input('Введите секретное слово: ')
+    description = input('Введите описание: ')
+    shop_id = int(input('Введите ID фидбека: '))
+    while not isinstance(shop_id, int):
+        try:
+            shop_id = int(input('Введите ID фидбека: '))
+        except ValueError:
+            print('ID магазина должен быть целым числом. Попробуйте еще раз.')
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.add_answer(
+            admin_login,
+            admin_password,
+            admin_word,
+            name,
+            description,
+            shop_id,
+        ).transact({'from': web3.eth.accounts[0]})
+
+        # ожидаем подтверждения транзакции
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+
+def rq():
+    # получаем параметры от пользователя
+    admin_login = input('Введите логин: ')
+    admin_password = input('Введите пароль: ')
+    admin_word = input('Введите секретное слово: ')
+    shop_id = int(input('Введите ID желаемой роли: '))
+    while not isinstance(shop_id, int):
+        try:
+            shop_id = int(input('Введите ID роли: '))
+        except ValueError:
+            print('ID роли должен быть целым числом. Попробуйте еще раз.')
+    fio = input('Введите описание запроса: ')
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.add_request(
+            admin_login,
+            admin_password,
+            admin_word,
+            shop_id,
+            fio
+        ).transact({'from': web3.eth.accounts[0]})
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+def a_rq():
+    # получаем параметры от пользователя
+    admin_login = input('Введите логин: ')
+    admin_password = input('Введите пароль: ')
+    admin_word = input('Введите секретное слово: ')
+    shop_id = int(input('Введите ID запроса: '))
+    while not isinstance(shop_id, int):
+        try:
+            shop_id = int(input('Введите ID запроса: '))
+        except ValueError:
+            print('ID запроса должен быть целым числом. Попробуйте еще раз.')
+    fio = input('Введите ответ на запрос (1 - принять, 0 - отклонить): ')
+    if fio == 1:
+        answ = True
+    elif fio == 0:
+        answ = False
+    else:
+        print("Ответ неверный.")
+        return
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.answer_on_request(
+            admin_login,
+            admin_password,
+            admin_word,
+            shop_id,
+            answ
+        ).transact({'from': web3.eth.accounts[0]})
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+
+def like():
+    admin_login = input('Введите логин: ')
+    admin_password = input('Введите пароль: ')
+    admin_word = input('Введите секретное слово: ')
+    shop_id = int(input('Введите ID фидбека или ответа на него: '))
+    while not isinstance(shop_id, int):
+        try:
+            shop_id = int(input('Введите ID фидбека или ответа на него: '))
+        except ValueError:
+            print('ID фидбека или ответа должен быть целым числом. Попробуйте еще раз.')
+    fio = input('Фидбек или ответ? (1 - фидбек, 0 - ответ): ')
+    if fio == 1:
+        answ = False
+    elif fio == 0:
+        answ = True
+    else:
+        print("Ответ неверный.")
+        return
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.add_like(
+            admin_login,
+            admin_password,
+            admin_word,
+            shop_id,
+            answ
+        ).transact({'from': web3.eth.accounts[0]})
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+
+def dislike():
+    admin_login = input('Введите логин: ')
+    admin_password = input('Введите пароль: ')
+    admin_word = input('Введите секретное слово: ')
+    shop_id = int(input('Введите ID фидбека или ответа на него: '))
+    while not isinstance(shop_id, int):
+        try:
+            shop_id = int(input('Введите ID фидбека или ответа на него: '))
+        except ValueError:
+            print('ID фидбека или ответа должен быть целым числом. Попробуйте еще раз.')
+    fio = input('Фидбек или ответ? (1 - фидбек, 0 - ответ): ')
+    if fio == 1:
+        answ = False
+    elif fio == 0:
+        answ = True
+    else:
+        print("Ответ неверный.")
+        return
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.add_dislike(
+            admin_login,
+            admin_password,
+            admin_word,
+            shop_id,
+            answ
+        ).transact({'from': web3.eth.accounts[0]})
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+
+def sw():
+    admin_login = input('Введите логин: ')
+    admin_password = input('Введите пароль: ')
+    admin_word = input('Введите секретное слово: ')
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.switchToBuyer(
+            admin_login,
+            admin_password,
+            admin_word,
+        ).transact({'from': web3.eth.accounts[0]})
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+def si():
+    adr = input('Введите ваш адрес аккаунта: ')
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.see_info().transact({'from': adr})
+        print(tx_hash)
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+
+def sb():
+    adr = input('Введите ваш адрес аккаунта: ')
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.see_balance().transact({'from': adr})
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+
+def sl():
+    shop_id = int(input('Введите ID фидбека или ответа на него: '))
+    while not isinstance(shop_id, int):
+        try:
+            shop_id = int(input('Введите ID фидбека или ответа на него: '))
+        except ValueError:
+            print('ID фидбека или ответа должен быть целым числом. Попробуйте еще раз.')
+    fio = input('Фидбек или ответ? (1 - фидбек, 0 - ответ): ')
+    if fio == 1:
+        answ = False
+    elif fio == 0:
+        answ = True
+    else:
+        print("Ответ неверный.")
+        return
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.see_likes(
+            shop_id,
+            answ,
+        ).transact({'from': web3.eth.accounts[0]})
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+def sd():
+    shop_id = int(input('Введите ID фидбека или ответа на него: '))
+    while not isinstance(shop_id, int):
+        try:
+            shop_id = int(input('Введите ID фидбека или ответа на него: '))
+        except ValueError:
+            print('ID фидбека или ответа должен быть целым числом. Попробуйте еще раз.')
+    fio = input('Фидбек или ответ? (1 - фидбек, 0 - ответ): ')
+    if fio == 1:
+        answ = False
+    elif fio == 0:
+        answ = True
+    else:
+        print("Ответ неверный.")
+        return
+    try:
+        # отправляем транзакцию на вызов функции
+        tx_hash = contract.functions.see_dislikes(
+            shop_id,
+            answ,
+        ).transact({'from': web3.eth.accounts[0]})
+        tx_receipt = web3.eth.wait_for_transaction_receipt(tx_hash)
+    except:
+        print("Ошибка! Проверьте введенные данные.")
+def main():
+    while True:
+        print("В рамках данной платформы вы можете сделать следующее:\n1 - Зарегистрировать пользователя\n2 - Сменить роль\n3 - Добавить отзыв\n4 - Добавить ответ на отзыв\n5 - Добавить запрос\n6 - Ответить на запрос\n7 - Добавить лайк\n8 - Добавить дизлайк\n9 - Сменить роль на покупателя\n10 - Вывести информацию\n11 - Вывести баланс\n12 - Вывести кол-во дизлайков\n13 - Вывести кол-во лайков")
+        action = int(input())
+        match(action):
+            case 1:
+                reg()
+            case 2:
+                chr()
+            case 3:
+                fdb()
+            case 4:
+                a_fdb()
+            case 5:
+                rq()
+            case 6:
+                a_rq()
+            case 7:
+                like()
+            case 8:
+                dislike()
+            case 9:
+                sw()
+            case 10:
+                si()
+            case 11:
+                sb()
+            case 12:
+                sl()
+            case 13:
+                sd()
+            case _:
+                print("Вы выбрали неправильную операцию")
+
+if __name__ == '__main__':
+    print("Здравствуйте!")
+    main()

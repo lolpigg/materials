@@ -1,5 +1,10 @@
 [
 	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -16,6 +21,219 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_login",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_secret_word",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_feedback_id",
+				"type": "uint256"
+			}
+		],
+		"name": "add_answer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_login",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_secret_word",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "target_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "IsAnswer",
+				"type": "bool"
+			}
+		],
+		"name": "add_dislike",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_login",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_secret_word",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			},
+			{
+				"internalType": "uint16",
+				"name": "_mark",
+				"type": "uint16"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_shop_id",
+				"type": "uint256"
+			}
+		],
+		"name": "add_feedback",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_login",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_secret_word",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "target_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "IsAnswer",
+				"type": "bool"
+			}
+		],
+		"name": "add_like",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_secret_word",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_login",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_role_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_description",
+				"type": "string"
+			}
+		],
+		"name": "add_request",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_admin_login",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_admin_password",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_admin_word",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_request_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "_answer",
+				"type": "bool"
+			}
+		],
+		"name": "answer_on_request",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -50,6 +268,44 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_admin_login",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_admin_password",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_user_adr",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_admin_word",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_user_role_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_shop_id",
+				"type": "uint256"
+			}
+		],
+		"name": "change_role",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -126,6 +382,90 @@
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "see_balance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "target_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "IsAnswer",
+				"type": "bool"
+			}
+		],
+		"name": "see_dislikes",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "see_info",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "target_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "IsAnswer",
+				"type": "bool"
+			}
+		],
+		"name": "see_likes",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -167,6 +507,87 @@
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_secret_word",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_login",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_password",
+				"type": "string"
+			}
+		],
+		"name": "switchToBuyer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_admin_login",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_admin_password",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "_user_adr",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_admin_word",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_user_word",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_user_login",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_user_password",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_user_role_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_shop_id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_fio",
+				"type": "string"
+			}
+		],
+		"name": "user_register",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
