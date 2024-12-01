@@ -1,0 +1,69 @@
+CREATE TABLE Establishments (
+    EstablishmentID SERIAL PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    Location VARCHAR(255) NOT NULL,
+    Type VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Menu (
+    MenuID SERIAL PRIMARY KEY,
+    EstablishmentID INT NOT NULL,
+    MenuDate DATE NOT NULL,
+    FOREIGN KEY (EstablishmentID) REFERENCES Establishments(EstablishmentID) ON DELETE RESTRICT
+);
+
+CREATE TABLE Dishes (
+    DishID SERIAL PRIMARY KEY,
+    MenuID INT NOT NULL,
+    Name VARCHAR(255) NOT NULL,
+    Description TEXT NOT NULL,
+    Price DECIMAL(10, 2) CHECK (Price >= 1) NOT NULL,
+    FOREIGN KEY (MenuID) REFERENCES Menu(MenuID) ON DELETE RESTRICT
+);
+
+CREATE TABLE Visitors (
+    VisitorID SERIAL PRIMARY KEY,
+    FirstName VARCHAR(100) NOT NULL,
+    LastName VARCHAR(100) NOT NULL,
+    Email VARCHAR(255) NOT NULL,
+    PhoneNumber VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE Orders (
+    OrderID SERIAL PRIMARY KEY,
+    VisitorID INT NOT NULL,
+    EstablishmentID INT NOT NULL,
+    OrderDate VARCHAR(10) NOT NULL,
+    TotalAmount DECIMAL(10, 2) CHECK (TotalAmount >= 0) NOT NULL,
+    FOREIGN KEY (VisitorID) REFERENCES Visitors(VisitorID) ON DELETE RESTRICT,
+    FOREIGN KEY (EstablishmentID) REFERENCES Establishments(EstablishmentID) ON DELETE RESTRICT
+);
+
+CREATE TABLE Reviews (
+    ReviewID SERIAL PRIMARY KEY,
+    EstablishmentID INT NOT NULL,
+    VisitorID INT NOT NULL,
+    Rating INT CHECK (Rating >= 1 AND Rating <= 5) NOT NULL,
+    Comment TEXT NOT NULL,
+    FOREIGN KEY (EstablishmentID) REFERENCES Establishments(EstablishmentID) ON DELETE RESTRICT,
+    FOREIGN KEY (VisitorID) REFERENCES Visitors(VisitorID) ON DELETE RESTRICT
+);
+
+CREATE TABLE Staff (
+    StaffID SERIAL PRIMARY KEY,
+    EstablishmentID INT NOT NULL,
+    FirstName VARCHAR(100) NOT NULL,
+    LastName VARCHAR(100) NOT NULL,
+    Position VARCHAR(100) NOT NULL,
+    FOREIGN KEY (EstablishmentID) REFERENCES Establishments(EstablishmentID) ON DELETE RESTRICT
+);
+
+CREATE TABLE Reservations (
+    ReservationID SERIAL PRIMARY KEY,
+    VisitorID INT NOT NULL,
+    EstablishmentID INT NOT NULL,
+    ReservationDate VARCHAR(10) NOT NULL,
+    NumberOfPeople INT CHECK (NumberOfPeople > 0) NOT NULL,
+    FOREIGN KEY (VisitorID) REFERENCES Visitors(VisitorID) ON DELETE RESTRICT,
+    FOREIGN KEY (EstablishmentID) REFERENCES Establishments(EstablishmentID) ON DELETE RESTRICT
+);
